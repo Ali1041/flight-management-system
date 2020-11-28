@@ -2,11 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
 from .models import *
 from django.contrib import messages
-from django.http import HttpResponse
-from django.http import JsonResponse
+from django.urls import reverse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.conf import settings
 import json
-import pandas as pd
 import os
 
 # main page function
@@ -15,6 +14,9 @@ def index(request):
     if not request.user.is_authenticated:
         return redirect("login")
 
+    if airline_staff.objects.filter(user = request.user).exists():
+        return HttpResponseRedirect(reverse('admin:index'))
+        
     return render(request, 'main.html')
 
 
